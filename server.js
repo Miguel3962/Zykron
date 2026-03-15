@@ -36,7 +36,8 @@ error:"Este email já está cadastrado"
 
 users[email] = {
 name:name,
-password:password
+password:password,
+habits:[]
 }
 
 saveUsers(users)
@@ -66,6 +67,44 @@ return res.json({error:"Senha incorreta"})
 res.json({
 success:true,
 name:users.name
+})
+
+})
+
+/* SALVAR HÁBITOS */
+
+app.post("/saveHabits",(req,res)=>{
+
+const {email,habits} = req.body
+
+let users = readUsers()
+
+if(!users[email]){
+return res.json({error:"Usuário não existe"})
+}
+
+users[email].habits = habits
+
+saveUsers(users)
+
+res.json({success:true})
+
+})
+
+/* CARREGAR HÁBITOS */
+
+app.post("/getHabits",(req,res)=>{
+
+const {email} = req.body
+
+let users = readUsers()
+
+if(!users[email]){
+return res.json({error:"Usuário não existe"})
+}
+
+res.json({
+habits: users[email].habits || []
 })
 
 })
