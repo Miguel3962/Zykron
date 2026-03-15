@@ -37,7 +37,9 @@ error:"Este email já está cadastrado"
 users[email] = {
 name:name,
 password:password,
-habits:[]
+habits:[],
+weeklyData:[0,0,0,0,0,0,0],
+calendarData:{}
 }
 
 saveUsers(users)
@@ -66,7 +68,7 @@ return res.json({error:"Senha incorreta"})
 
 res.json({
 success:true,
-name:users.name
+name:users[email].name
 })
 
 })
@@ -90,6 +92,85 @@ saveUsers(users)
 res.json({success:true})
 
 })
+
+/* SALVAR GRAFICO */
+
+app.post("/saveWeekly",(req,res)=>{
+
+const {email,weeklyData} = req.body
+
+let users = readUsers()
+
+if(!users[email]){
+return res.json({error:"Usuário não existe"})
+}
+
+users[email].weeklyData = weeklyData
+
+saveUsers(users)
+
+res.json({success:true})
+
+})
+
+/* CARREGAR GRAFICO */
+
+app.post("/getWeekly",(req,res)=>{
+
+const {email} = req.body
+
+let users = readUsers()
+
+if(!users[email]){
+return res.json({error:"Usuário não existe"})
+}
+
+res.json({
+weeklyData: users[email].weeklyData || [0,0,0,0,0,0,0]
+})
+
+})
+
+/* SALVAR CALENDARIO */
+
+app.post("/saveCalendar",(req,res)=>{
+
+const {email,calendarData} = req.body
+
+let users = readUsers()
+
+if(!users[email]){
+return res.json({error:"Usuário não existe"})
+}
+
+users[email].calendarData = calendarData
+
+saveUsers(users)
+
+res.json({success:true})
+
+})
+
+/* CARREGAR CALENDARIO */
+
+app.post("/getCalendar",(req,res)=>{
+
+const {email} = req.body
+
+let users = readUsers()
+
+if(!users[email]){
+return res.json({error:"Usuário não existe"})
+}
+
+res.json({
+calendarData: users[email].calendarData || {}
+})
+
+})
+
+
+
 
 /* CARREGAR HÁBITOS */
 
